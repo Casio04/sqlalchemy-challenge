@@ -23,15 +23,20 @@ app = Flask(__name__)
 # Create first route including only the links to the other routes
 @app.route("/")
 def home():
-    return(f"""<h1>Hello. This is the main webpage.</h1> <br>
-    Here are the routes available: <br>
+    max_date = session.query(func.max(Measurement.date)).scalar()
+    min_date = session.query(func.min(Measurement.date)).scalar()
+    return(f"""<section style="font-family:Arial">
+    <h1 style="color:darkblue">Hello. This is the API index.</h1>
+    <p> The minimum date available is: <b>{min_date}</b>. <br>
+    The maximum date available is: <b>{max_date}</b>
+    <h3 style="color:darkblue">Here are the routes available: </h3>
     <ol>
-        <li><a target="_blank" href="/api/v1.0/precipitation">/api/v1.0/precipitation</a></li>
-        <li><a target="_blank" href="/api/v1.0/stations">/api/v1.0/stations</a></li>
-        <li><a target="_blank" href="/api/v1.0/tobs">/api/v1.0/tobs</a></li>
-        <li><a target="_blank" href="/api/v1.0/start">/api/v1.0/start</a></li>
-        <li><a target="_blank" href="/api/v1.0/start/end">/api/v1.0/start/end</a></li>
-    </ol>""")
+        <li><a target="_blank" href="/api/v1.0/precipitation">/api/v1.0/precipitation </a> - Daily precipitation data from the last 12 months available</li>
+        <li><a target="_blank" href="/api/v1.0/stations">/api/v1.0/stations</a> - The list of available stations as of today</li>
+        <li><a target="_blank" href="/api/v1.0/tobs">/api/v1.0/tobs</a> - Daily temperatures observed data from the last 12 months available</li>
+        <li><a target="_blank" href="/api/v1.0/start/end">/api/v1.0/start/end</a> - Returns the maximum, minimum and average temperature for a range of time.</li>
+    </ol>
+    </section>""")
 
 @app.route("/api/v1.0/precipitation")
 def prec():
